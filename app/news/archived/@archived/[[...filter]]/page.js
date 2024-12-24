@@ -5,12 +5,19 @@ import Link from 'next/link';
 
 export default async function FilteredNews({ params }) {
   const filter = (await params).filter;
-    let links = getAvailableNewsYears();
   const [selectedYear, selectedMonth] = filter ?? [];
 
+  const availableMonths = getAvailableNewsMonths(selectedYear);
+  const availableYears = getAvailableNewsYears();
+
+  if(!availableYears.includes(+selectedYear) || !availableMonths.includes(+selectedMonth)){
+    throw Error('Invalid request.')
+  }
+  
+  let links = availableYears;
   let news = newsObjects;
   if (selectedYear && !selectedMonth) {
-    links = getAvailableNewsMonths(selectedYear);
+    links = availableMonths;
     news = getNewsForYear(selectedYear);
   }
 
@@ -18,19 +25,20 @@ export default async function FilteredNews({ params }) {
     links = [];
     news = getNewsForYearAndMonth(selectedYear, selectedMonth);
   }
- 
+
   return (
     <>
       <header id='archive-header'>
         <nav>
           <ul>
             {links.map(link => {
-              const href = selectedYear ? `/news/archived/${selectedYear}/${link}` : `/news/archived/${link}`
+              const href = selectedYear ? `/news/archived/${selectedYear}/${link}` : `/news/archived/${link}`;
               return (
-              <li key={link}>
-                <Link href={href}>{link}</Link>
-              </li>
-            )})}
+                <li key={link}>
+                  <Link href={href}>{link}</Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <NewsList newsList={news} />
