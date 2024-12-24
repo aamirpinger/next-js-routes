@@ -1,7 +1,7 @@
-import { notFound} from 'next/navigation';
-import { newsObjects } from '../../../newObject';
+import { notFound} from 'next/navigation'; 
 import Image from 'next/image';
 import Link from 'next/link';
+import { newsObjects } from '@/newObject';
 
 export default async function NewDetails({params}) {
   const { slug } = await params;

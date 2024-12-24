@@ -6,11 +6,11 @@ import Link from 'next/link';
 export default async function FilteredNews({ params }) {
   const filter = (await params).filter;
   const [selectedYear, selectedMonth] = filter ?? [];
-
+  
   const availableMonths = getAvailableNewsMonths(selectedYear);
   const availableYears = getAvailableNewsYears();
 
-  if(!availableYears.includes(+selectedYear) || !availableMonths.includes(+selectedMonth)){
+  if((selectedYear && !availableYears.includes(+selectedYear)) || (selectedMonth && !availableMonths.includes(+selectedMonth))){
     throw Error('Invalid request.')
   }
   
@@ -32,7 +32,7 @@ export default async function FilteredNews({ params }) {
         <nav>
           <ul>
             {links.map(link => {
-              const href = selectedYear ? `/news/archived/${selectedYear}/${link}` : `/news/archived/${link}`;
+              const href = selectedYear ? `/archived/${selectedYear}/${link}` : `/archived/${link}`;
               return (
                 <li key={link}>
                   <Link href={href}>{link}</Link>
